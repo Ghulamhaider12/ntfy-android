@@ -504,28 +504,72 @@ class DetailAdapter(private val activity: Activity, private val lifecycleScope: 
         }
 
         private fun runViewAction(context: Context, action: Action) {
+
             try {
                 val url = action.url ?: return
-                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
-                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+
+
+                // Check if the URL contains "statio.io"
+                if (url.contains("saito.io")) {
+                    // Launch your specific activity if the URL contains "statio.io"
+                    val intent = Intent(context, MainActivity2::class.java)
+                    intent.putExtra("url", url)
+                    context.startActivity(intent)
+                } else {
+                    // Otherwise, open the URL in a browser
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    context.startActivity(browserIntent)
                 }
-                context.startActivity(intent)
             } catch (e: Exception) {
-                Log.w(TAG, "Unable to start activity from URL ${action.url}", e)
+                Log.w(TAG, "Failed to open URL: ${action.url}", e)
                 val message = if (e is ActivityNotFoundException) action.url else e.message
-                Toast
-                    .makeText(context, context.getString(R.string.detail_item_cannot_open_url, message), Toast.LENGTH_LONG)
-                    .show()
+                Toast.makeText(context, context.getString(R.string.detail_item_cannot_open_url, message), Toast.LENGTH_LONG).show()
             }
+//            try {
+//                val url = action.url ?: return
+//                val intent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+//                    addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+//                }
+//                context.startActivity(intent)
+//            } catch (e: Exception) {
+//                Log.w(TAG, "c ${action.url}", e)
+//                val message = if (e is ActivityNotFoundException) action.url else e.message
+//                Toast
+//                    .makeText(context, context.getString(R.string.detail_item_cannot_open_url, message), Toast.LENGTH_LONG)
+//                    .show()
+//            }
         }
 
         private fun runOtherUserAction(context: Context, notification: Notification, action: Action) {
-            val intent = Intent(context, NotificationService.UserActionBroadcastReceiver::class.java).apply {
-                putExtra(NotificationService.BROADCAST_EXTRA_TYPE, NotificationService.BROADCAST_TYPE_USER_ACTION)
-                putExtra(NotificationService.BROADCAST_EXTRA_NOTIFICATION_ID, notification.id)
-                putExtra(NotificationService.BROADCAST_EXTRA_ACTION_ID, action.id)
+
+            try {
+                val url = action.url ?: return
+
+                // Check if the URL contains "statio.io"
+                if (url.contains("statio.io")) {
+                    val intent = Intent(context, MainActivity2::class.java)
+                    intent.putExtra("url", url)
+                    context.startActivity(intent)
+                } else {
+                    // Otherwise, open the URL in a browser
+                    val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(url)).apply {
+                        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                    }
+                    context.startActivity(browserIntent)
+                }
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to open URL: ${action.url}", e)
+                val message = if (e is ActivityNotFoundException) action.url else e.message
+                Toast.makeText(context, context.getString(R.string.detail_item_cannot_open_url, message), Toast.LENGTH_LONG).show()
             }
-            context.sendBroadcast(intent)
+//            val intent = Intent(context, NotificationService.UserActionBroadcastReceiver::class.java).apply {
+//                putExtra(NotificationService.BROADCAST_EXTRA_TYPE, NotificationService.BROADCAST_TYPE_USER_ACTION)
+//                putExtra(NotificationService.BROADCAST_EXTRA_NOTIFICATION_ID, notification.id)
+//                putExtra(NotificationService.BROADCAST_EXTRA_ACTION_ID, action.id)
+//            }
+//            context.sendBroadcast(intent)
         }
 
         private fun previewableImage(fileStat: FileInfo?): Boolean {

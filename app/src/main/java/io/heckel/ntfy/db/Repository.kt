@@ -279,7 +279,7 @@ class Repository(private val sharedPrefs: SharedPreferences, private val databas
     }
 
     fun getConnectionProtocol(): String {
-        return sharedPrefs.getString(SHARED_PREFS_CONNECTION_PROTOCOL, null) ?: CONNECTION_PROTOCOL_JSONHTTP
+        return sharedPrefs.getString(SHARED_PREFS_CONNECTION_PROTOCOL, null) ?: CONNECTION_PROTOCOL_WS
     }
 
     fun getBroadcastEnabled(): Boolean {
